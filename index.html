@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Lab VUE.JS</title>
+    <link rel="stylesheet" href="css/bulma.css">
+
+  </head>
+  <!-- v- directive v-blind -->
+  <body>
+    <div class="container" id="register">
+      <article class="message is-primary">
+        <div class="message-body"
+             v-bind:title="message">
+          <div>
+            <p class="title" align= 'center'>Register for the festival</p>
+          </div>
+        </div>
+      </article>
+
+      <button class="button"
+              v-on:click="isModeCreate=!isModeCreate">
+        Toggle Mode
+      </button>
+
+      <div v-if="isModeCreate">
+        <div class="field">
+          <label class="label">Firstname</label>
+          <p class="control">
+            <input v-model="formplayer.firstname"
+                   class="input" type="text">
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label">Lastname</label>
+          <p class="control">
+            <input v-model="formplayer.lastname"
+                   class="input" type="text">
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label">Gender</label>
+          <p class="control">
+            <span class="select">
+              <select v-model="formplayer.gender">
+                <option value=''>Select gender</option>
+                <option value='M'>Male</option>
+                <option value='F'>Female</option>
+              </select>
+            </span>
+          </p>
+        </div>
+
+        <button class="button"
+                v-on:click="submitplayer()">
+          Add New Player
+        </button>
+
+      </div>
+
+      <table class="table" v-if="!isModeCreate">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Gender</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(player, index) in players">
+            <td>{{ index + 1 }}</td>
+            <td>{{ player.firstname }}</td>
+            <td>{{ player.lastname | upper}}</td>
+            <td>{{ player.gender | toFullGender}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div class="columns is-multiline is-mobile" v-if="isShow">
+
+        <div class="column is-one-third">
+          <article class="tile is-child box notification is-info" v-on:click="showReward0()">
+            <div v-if="isReward0">
+              <figure class="image is-128x128">
+              <img v-bind:src="rewards[0].img">
+            </figure>
+              <div class="content">
+              {{ rewards[0].name}}
+              </div>
+            </div>
+          </article>
+      </div>
+
+      <div class="column is-one-third">
+        <article class="tile is-child box notification is-info" v-on:click="showReward1()">
+              <div v-if="isReward1">
+                <figure class="image is-128x128">
+                <img v-bind:src="rewards[1].img">
+              </figure>
+                <div class="content">
+                {{ rewards[1].name}}
+                </div>
+              </div>
+        </article>
+    </div>
+
+    <div class="column is-one-third">
+      <article class="tile is-child box notification is-info" v-on:click="showReward2()">
+        <div v-if="isReward2">
+          <figure class="image is-128x128">
+          <img v-bind:src="rewards[2].img">
+        </figure>
+          <div class="content">
+          {{ rewards[2].name}}
+          </div>
+        </div>
+      </article>
+  </div>
+
+  <div class="column is-one-third">
+    <article class="tile is-child box notification is-info" v-on:click="showReward3()">
+      <div v-if="isReward3">
+        <figure class="image is-128x128">
+        <img v-bind:src="rewards[3].img">
+      </figure>
+        <div class="content">
+        {{ rewards[3].name}}
+        </div>
+      </div>
+    </article>
+</div>
+
+<div class="column is-one-third">
+  <article class="tile is-child box notification is-info" v-on:click="showReward4()">
+    <div v-if="isReward4">
+      <figure class="image is-128x128">
+      <img v-bind:src="rewards[4].img">
+    </figure>
+      <div class="content">
+      {{ rewards[4].name}}
+      </div>
+    </div>
+  </article>
+</div>
+
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>Firstname</th>
+      <th>Lastname</th>
+      <th>Reward</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(player, index) in playerReward">
+      <td>{{ index + 1 }}</td>
+      <td>{{ player.firstname }}</td>
+      <td>{{ player.lastname }}</td>
+      <td>{{ player.prize}}</td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+
+    <script src="js/vue-2.2.6.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script>
+
+    Vue.filter('upper', function(value){
+      return value.toUpperCase();
+    });
+
+      var vm1 = new Vue({
+        el: '#register',
+        data: {
+          players: [],
+          playerReward: [],
+          rewards: [],
+          isShow: false,
+          isModeCreate: false,
+          number:0,
+
+          isReward0: false,
+          isReward1: false,
+          isReward2: false,
+          isReward3: false,
+          isReward4: false,
+
+          formplayer: {
+            firstname: '',
+            lastname: '',
+            gender: '',
+          }
+
+        },
+        filters: {
+          toFullGender: function(value){
+            var gender = 'Unknown';
+            switch (value) {
+              case 'M':
+                gender = 'Male';
+                break;
+              case 'F':
+                gender = 'Female';
+                break;
+            }
+            return gender;
+          }
+        },
+
+        mounted: function() {
+
+          $.ajax({
+            url: 'reward.config.json',
+            method:'GET',
+            context: this,
+            success: function(data){
+              this.rewards = data;
+            },
+            error: function(error){
+              alert(JSON.stringify(error));
+            }
+          });
+        },
+
+        methods: {
+          submitplayer: function(){
+
+            if ( this.formplayer.firstname.length > 2
+            && this.formplayer.lastname.length > 2
+            && this.formplayer.gender.length > 0
+            ) {
+              this.players.push({
+                firstname: this.formplayer.firstname,
+                lastname: this.formplayer.lastname,
+                gender: this.formplayer.gender,
+              });
+              this.clearFormplayer();
+              this.isModeCreate = !this.isModeCreate;
+
+              if(this.players.length == 5){
+                this.rewards = this.shuffle(this.rewards);
+                this.displaygame();
+              }
+            } else {
+              alert("Invalid Input data");
+            }
+          },
+          clearFormplayer: function(){
+            this.formplayer.firstname = '';
+            this.formplayer.lastname = '';
+            this.formplayer.gender = '';
+          },
+          displaygame: function(){
+              this.isShow = !this.isShow;
+          },
+          showReward0: function(){
+            this.isReward0 = true;
+            this.playerReward.push({
+              firstname: this.players[this.number].firstname,
+              lastname: this.players[this.number].lastname,
+              prize : this.rewards[0].name
+            });
+            this.number++;
+          },
+          showReward1: function(){
+            this.isReward1 = true;
+            this.playerReward.push({
+              firstname: this.players[this.number].firstname,
+              lastname: this.players[this.number].lastname,
+              prize : this.rewards[1].name
+            });
+            this.number++;
+
+          },
+          showReward2: function(){
+            this.isReward2 = true;
+            this.playerReward.push({
+              firstname: this.players[this.number].firstname,
+              lastname: this.players[this.number].lastname,
+              prize : this.rewards[2].name
+            });
+            this.number++;
+
+          },
+          showReward3: function(){
+            this.isReward3 = true;
+            this.playerReward.push({
+              firstname: this.players[this.number].firstname,
+              lastname: this.players[this.number].lastname,
+              prize : this.rewards[3].name
+            });
+            this.number++;
+
+          },
+          showReward4: function(){
+            this.isReward4 = true;
+
+            this.playerReward.push({
+              firstname: this.players[this.number].firstname,
+              lastname: this.players[this.number].lastname,
+              prize : this.rewards[4].name
+            });
+            this.number++;
+
+          },
+         shuffle:  function(array) {
+            var currentIndex = array.length, temporaryValue, randomIndex;
+
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+
+              // Pick a remaining element...
+              randomIndex = Math.floor(Math.random() * currentIndex);
+              currentIndex -= 1;
+
+              // And swap it with the current element.
+              temporaryValue = array[currentIndex];
+              array[currentIndex] = array[randomIndex];
+              array[randomIndex] = temporaryValue;
+            }
+
+            return array;
+          }
+        }
+      });
+
+
+    </script>
+  </body>
+</html>

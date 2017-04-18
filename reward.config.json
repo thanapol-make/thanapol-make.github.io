@@ -1,0 +1,20 @@
+[{
+  "name":"ELECTROLUX EMS2327S",
+  "img" :"img/wave.jpg"
+},
+{
+  "name":"Philips HD3038",
+  "img" :"img/warm.jpg"
+},
+{
+  "name":"HITACHI RM600GP2THGBK",
+  "img" :"img/freeze.jpg"
+},
+{
+  "name":"Samsung SUHD TV KS9000",
+  "img" :"img/tv.jpg"
+},
+{
+  "name":"Macbook air",
+  "img" :"img/macbookair.jpg"
+}]
